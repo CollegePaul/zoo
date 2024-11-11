@@ -6,3 +6,9 @@ x Fixed Bootstarp form using pip install crispy-bootstrap4,
 + Added Login html page, fixed form colour with text-white  bg-primary
 + added Requirements.tex
 
+
+04/11/24
+
+
+
+    

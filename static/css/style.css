@@ -29,3 +29,13 @@
     width:500px;
     border-radius: 5px;
  }
+
+ #icon{
+  width: 48px;
+  height: 48px;
+  margin-right: 20px;
+ }
+
+ .signout{
+  margin-right: 20px;
+ }
