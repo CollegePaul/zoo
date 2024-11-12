@@ -10,5 +10,10 @@ x Fixed Bootstarp form using pip install crispy-bootstrap4,
 04/11/24
 
 
+12/11/24
+
+- need to add the @login decorator
+- need to fix the 
+
 
     

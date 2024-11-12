@@ -11,11 +11,12 @@ class ZooUser(AbstractUser):
 class HotelBooking(models.Model):
     
     hotel_user_id = models.ForeignKey(ZooUser, on_delete=models.CASCADE)
-    hotel_booking_date = models.DateTimeField(auto_now_add=True)
-    hotel_booking_date_arrive = models.DateTimeField()
-    hotel_booking_date_leave = models.DateTimeField()
+    hotel_booking_date = models.DateField(auto_now_add=True)
+    hotel_booking_date_arrive = models.DateField()
+    hotel_booking_date_leave = models.DateField()
     hotel_booking_adults = models.IntegerField(default=0)
     hotel_booking_children = models.IntegerField(default=0)
     hotel_booking_oap = models.IntegerField(default=0)
     hotel_total_cost = models.FloatField(default=0)
     hotel_points = models.IntegerField(default=0)
+

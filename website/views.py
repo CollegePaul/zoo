@@ -49,18 +49,18 @@ def user_logout(request):
     auth.logout(request)
     return redirect("website/my-login")
 
-
+@login_required(login_url='my-login')
 def hotel(request):
     
     form = Hotel_Booking_Form()
     
 
-    if request.method == "POST":
-        form  = Hotel_Booking_Form(request.POST)
-        if form.is_valid():
-            form.save()
-            #messages.success(request, "Account created successfully!")
-            return redirect('my-login')
+    # if request.method == "POST":
+    #     form  = Hotel_Booking_Form(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         #messages.success(request, "Account created successfully!")
+    #         return redirect('my-login')
     
     context = {'form': form}
 
