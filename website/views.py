@@ -4,6 +4,7 @@ from .forms import CreateUserForm, LoginForm,Hotel_Booking_Form
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 def home(request):
     return render(request, 'website/index.html')
@@ -55,12 +56,19 @@ def hotel(request):
     form = Hotel_Booking_Form()
     
 
-    # if request.method == "POST":
-    #     form  = Hotel_Booking_Form(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         #messages.success(request, "Account created successfully!")
-    #         return redirect('my-login')
+    if request.method == "POST":
+        
+        updated_request = request.POST.copy()
+        updated_request.update({'hotel_user_id_id': request.user})
+
+        print(updated_request)
+
+        form  = Hotel_Booking_Form(updated_request)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Hotel booked successfully!")
+            return redirect('index')
     
     context = {'form': form}
 

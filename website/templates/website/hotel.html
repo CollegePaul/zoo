@@ -1,5 +1,6 @@
 {% extends 'website/base.html' %}
 {% load static %}
+
 {% comment %} <link rel="stylesheet" href="{% static 'css/style.css' %}"> {% endcomment %}
 {% load crispy_forms_tags %}
 
@@ -14,15 +15,13 @@
     <br>
     <form method="POST" autocomplete="off">
         {% csrf_token %}
-        {{form|cripsy}}
+        
+        {{form|crispy}}
         <br>
-        <button type="submit" class="btn btn-primary w-100 btn-block p-2"> Login &nbsp; <i class="fa fa-key" aria-hidden="true"></i></button>
+        <button type="submit" class="btn btn-primary w-100 btn-block p-2"> Book &nbsp; <i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
     </form>
-
-    <br>
-    
-    
+     
 
 </div>
-
+<br>
 {% endblock %}
