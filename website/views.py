@@ -5,6 +5,7 @@ from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from datetime import datetime
 
 def home(request):
     return render(request, 'website/index.html')
@@ -54,16 +55,49 @@ def user_logout(request):
 def hotel(request):
     
     form = Hotel_Booking_Form()
-    
 
     if request.method == "POST":
+        updated_request = request.POST.copy()
+        updated_request.update({'hotel_user_id_id': request.user})
+      
+        form  = Hotel_Booking_Form(updated_request)
+
+
         if form.is_valid():
             obj = form.save(commit=False) # Return an object without saving to the DB
+
+            # Calculate the number of days
+            arrive = obj.hotel_booking_date_arrive
+            depart = obj.hotel_booking_date_leave
+            result = depart - arrive
+            print ("Number of days: ", result.days)
+
+
+            hotel_total_cost = int(obj.hotel_booking_adults) * 65 \
+                                    + int(obj.hotel_booking_children) * 35 \
+                                    + int(obj.hotel_booking_oap) * 40
+            
+            hotel_total_cost *= int(result.days)
+            
+            hotel_points = int(hotel_total_cost / 20)
+            print("Hotel Points: ", hotel_points)
+            print("printing booking costs: ", hotel_total_cost)
+
+
+            #set the values in the data
+            obj.hotel_points = hotel_points
+            obj.hotel_total_cost = hotel_total_cost
             obj.hotel_user_id = request.user # Add the hotel_user_id field with the user object
+
             obj.save() # Save to database
             
             messages.success(request, "Hotel booked successfully!")
             return redirect('')
+        else:
+            print("there was a problem with the form")
+            messages.success(request, "Hotel booked successfully!")
+            return redirect('hotel')
+
     
     context = {'form': form}
 

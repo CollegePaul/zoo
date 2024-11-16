@@ -15,11 +15,15 @@
     
     <hr>
     <br>
+
     <form action="{% url 'hotel' %}" method="POST" autocomplete="off">
         {% csrf_token %}
         
         {{form|crispy}}
         <br>
+        <h2 id="hotel_output" >Hotel cost: £0.00</h2>
+        <br>
+
         <button type="submit" class="btn btn-primary w-100 btn-block p-2"> Book &nbsp; <i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
     </form>
      
@@ -28,7 +32,5 @@
 <br>
 
 <script src="{% static 'js/hotel.js' %}"></script>
-<script>
-    
-</script>
+
 {% endblock %}
