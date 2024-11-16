@@ -57,18 +57,13 @@ def hotel(request):
     
 
     if request.method == "POST":
-        
-        updated_request = request.POST.copy()
-        updated_request.update({'hotel_user_id_id': request.user})
-
-        print(updated_request)
-
-        form  = Hotel_Booking_Form(updated_request)
-
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False) # Return an object without saving to the DB
+            obj.hotel_user_id = request.user # Add the hotel_user_id field with the user object
+            obj.save() # Save to database
+            
             messages.success(request, "Hotel booked successfully!")
-            return redirect('index')
+            return redirect('')
     
     context = {'form': form}
 
