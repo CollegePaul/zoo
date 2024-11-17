@@ -21,3 +21,4 @@ class HotelBooking(models.Model):
     hotel_total_cost = models.FloatField(default=0)
     hotel_points = models.IntegerField(default=0)
 
+

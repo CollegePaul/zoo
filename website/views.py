@@ -95,7 +95,6 @@ def hotel(request):
             return redirect('')
         else:
             print("there was a problem with the form")
-            messages.success(request, "Hotel booked successfully!")
             return redirect('hotel')
 
     
