@@ -22,3 +22,16 @@ class HotelBooking(models.Model):
     hotel_points = models.IntegerField(default=0)
 
 
+class ZooBooking(models.Model):
+    
+    booking_id = models.AutoField(primary_key=True, editable=False)
+    zoo_user_id = models.ForeignKey(ZooUser, on_delete=models.CASCADE)
+    zoo_booking_date = models.DateField(auto_now_add=True)
+    zoo_booking_date_arrive = models.DateField()
+    zoo_booking_date_leave = models.DateField()
+    zoo_booking_adults = models.IntegerField(default=0)
+    zoo_booking_children = models.IntegerField(default=0)
+    zoo_booking_oap = models.IntegerField(default=0)
+    zoo_total_cost = models.FloatField(default=0)
+    zoo_points = models.IntegerField(default=0)
+

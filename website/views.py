@@ -1,5 +1,5 @@
 from django.shortcuts import render,  redirect
-from .forms import CreateUserForm, LoginForm,Hotel_Booking_Form
+from .forms import CreateUserForm, LoginForm,Hotel_Booking_Form, Zoo_Booking_Form
 
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
@@ -108,3 +108,55 @@ def education(request):
 
 def test(request):
     return render(request,'website/test.html')
+
+
+@login_required(login_url='my-login')
+def zoo(request):
+    
+    form = Zoo_Booking_Form()
+
+    if request.method == "POST":
+        updated_request = request.POST.copy()
+        updated_request.update({'zoo_user_id_id': request.user})
+      
+        form  = Zoo_Booking_Form(updated_request)
+
+
+        if form.is_valid():
+            obj = form.save(commit=False) # Return an object without saving to the DB
+
+            # Calculate the number of days
+            arrive = obj.zoo_booking_date_arrive
+            depart = obj.zoo_booking_date_leave
+            result = depart - arrive
+            print ("Number of days: ", result.days)
+
+
+            zoo_total_cost = int(obj.zoo_booking_adults) * 12 \
+                                    + int(obj.zoo_booking_children) * 8 \
+                                    + int(obj.zoo_booking_oap) * 9
+            
+            zoo_total_cost *= int(result.days)
+            
+            zoo_points = int(zoo_total_cost / 20)
+            print("Hotel Points: ", zoo_points)
+            print("printing booking costs: ", zoo_total_cost)
+
+
+            #set the values in the data
+            obj.hotel_points = zoo_points
+            obj.hotel_total_cost = zoo_total_cost
+            obj.hotel_user_id = request.user # Add the hotel_user_id field with the user object
+
+            obj.save() # Save to database
+            
+            messages.success(request, "Hotel booked successfully!")
+            return redirect('')
+        else:
+            print("there was a problem with the form")
+            return redirect('hotel')
+
+    
+    context = {'form': form}
+
+    return render(request, 'website/hotel.html', context=context)
