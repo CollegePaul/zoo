@@ -18,9 +18,9 @@ function update_cost(){
     }else{
 
         // calculate costs
-        let total = parseInt(adults.value) * 65
-                    + parseInt(children.value) * 35
-                    + parseInt(oaps.value) * 45
+        let total = parseInt(adults.value) * 12
+                    + parseInt(children.value) * 8
+                    + parseInt(oaps.value) * 9
 
         // multiply by number of nights booked
         total = total * days

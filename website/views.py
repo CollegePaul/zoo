@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import datetime
 
+
+from .models import HotelBooking, ZooBooking
+
 def home(request):
     return render(request, 'website/index.html')
 
@@ -109,6 +112,22 @@ def education(request):
 def test(request):
     return render(request,'website/test.html')
 
+@login_required(login_url='my-login')
+def dashboard(request):
+
+    if request.method == "POST":
+        icon = request.POST['icon']
+        request.user.updateIcon(icon)
+
+
+    # get the bookings made by the loged in user
+    my_hotel_bookings = HotelBooking.objects.filter(hotel_user_id = request.user.id)
+    my_zoo_bookings = ZooBooking.objects.filter(zoo_user_id = request.user.id)
+    context = {'hotel_records': my_hotel_bookings,
+               'zoo_records': my_zoo_bookings,}
+
+    return render(request, 'website/dashboard.html',context=context )
+
 
 @login_required(login_url='my-login')
 def zoo(request):
@@ -116,6 +135,7 @@ def zoo(request):
     form = Zoo_Booking_Form()
 
     if request.method == "POST":
+      
         updated_request = request.POST.copy()
         updated_request.update({'zoo_user_id_id': request.user})
       
@@ -130,33 +150,43 @@ def zoo(request):
             depart = obj.zoo_booking_date_leave
             result = depart - arrive
             print ("Number of days: ", result.days)
+            #note the days have not been validated yet
+            #option for single day bookings may be better
+            #if arrive date and end date are the same days = 0
 
-
+            #work out the cost
             zoo_total_cost = int(obj.zoo_booking_adults) * 12 \
                                     + int(obj.zoo_booking_children) * 8 \
                                     + int(obj.zoo_booking_oap) * 9
-            
             zoo_total_cost *= int(result.days)
-            
-            zoo_points = int(zoo_total_cost / 20)
-            print("Hotel Points: ", zoo_points)
-            print("printing booking costs: ", zoo_total_cost)
+                       
+            #has the user requested to pay with points ?
+            #suplimenting their payment 
+            checkbox_points =  request.POST.get("use_points")
+            saving = 0
+            if checkbox_points == "yes":
+                saving = request.user.spendPoints(zoo_total_cost)
 
+            #get additional points and add them to the user
+            zoo_points = int(zoo_total_cost / 20)
+            request.user.addPoints(zoo_points)
 
             #set the values in the data
-            obj.hotel_points = zoo_points
-            obj.hotel_total_cost = zoo_total_cost
-            obj.hotel_user_id = request.user # Add the hotel_user_id field with the user object
+            obj.zoo_points = zoo_points
+            obj.zoo_total_cost = zoo_total_cost
+            obj.zoo_user_id = request.user # Add the hotel_user_id field with the user object
+
+            
 
             obj.save() # Save to database
             
-            messages.success(request, "Hotel booked successfully!")
+            messages.success(request, "Zoo booked successfully! Saveing £" + str(saving))
             return redirect('')
         else:
             print("there was a problem with the form")
-            return redirect('hotel')
+            return redirect('zoo')
 
     
     context = {'form': form}
 
-    return render(request, 'website/hotel.html', context=context)
+    return render(request, 'website/zoo.html', context=context)

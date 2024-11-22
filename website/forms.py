@@ -58,6 +58,7 @@ class Zoo_Booking_Form(forms.ModelForm):
             'zoo_booking_date_leave': forms.DateInput(attrs={'type': 'date'}),
             'zoo_total_cost': forms.HiddenInput(),
             'zoo_points': forms.HiddenInput(),
+            
         }
 
     def __init__(self, *args, **kwargs):

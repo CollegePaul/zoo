@@ -8,6 +8,35 @@ class ZooUser(AbstractUser):
     phone = models.CharField(max_length=14, blank=True)
     icon = models.CharField(max_length=64, default="lion")
 
+    def updateIcon(self, icon):
+        print("updating user with icon,", icon)
+        self.icon = icon
+        self.save()
+
+    def addPoints(self,points):
+        print("Adding points", points)
+        self.points += int(points)
+        self.save()
+
+    def spendPoints(self, cost):
+        
+        money_off = self.points * 5
+
+        if money_off <= cost:
+            self.points = 0
+            self.save()
+            return money_off
+        
+        if money_off > cost:
+            diff = money_off - cost #you will have some left
+            self.points = diff // 5 # change the money left into points
+            self.save()
+            return cost
+
+        return 0  # should not happen
+        
+
+
 class HotelBooking(models.Model):
     
     booking_id = models.AutoField(primary_key=True, editable=False)
@@ -21,6 +50,7 @@ class HotelBooking(models.Model):
     hotel_total_cost = models.FloatField(default=0)
     hotel_points = models.IntegerField(default=0)
 
+    
 
 class ZooBooking(models.Model):
     
@@ -34,4 +64,5 @@ class ZooBooking(models.Model):
     zoo_booking_oap = models.IntegerField(default=0)
     zoo_total_cost = models.FloatField(default=0)
     zoo_points = models.IntegerField(default=0)
+    
 
